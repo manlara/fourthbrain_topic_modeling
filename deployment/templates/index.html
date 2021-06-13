@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>GLG Specialists</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="jumbotron" style="text-align: center">
+            <h1>GLG Specialists</h1>
+            <p>Enter your request below</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-offset-2 col-md-4">
+                <textarea id="inputNER" name="inputText" rows="4" cols="40">
+                </textarea>
+            </div>
+            <div class="col-md-offset-2 col-md-4" id="outputNER">
+                This is where the colorful NER tag version of the input text will go
+            </div>
+        </div>
+        <button type="button" class="btn btn-success" id="submit">Click to tag with NER</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"></script>
+    <script>
+        var HandleSubmit = function() {
+            var text = d3.select("#inputNER").node().value;
+            var request = d3.text("https://api-inference.huggingface.co/models/dslim/bert-base-NER", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer api_azMHDdYnrORmmLFRiKPSLWKlKLbROzbrXc",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "inputs": text
+                })
+            });
+            // request is a Promise
+            request.then(function(result) {
+                // From here you create the colorful
+                console.log(result);
+            })
+        }
+        d3.select("#submit").on("click", HandleSubmit)
+    </script>
+</body>
+
+</html>
