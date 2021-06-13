@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, request as flask_request, render_template
 import json
 import requests
+import os
 
+TOKEN = os.environ.get("NER_TOKEN")
 API_URL = "https://api-inference.huggingface.co/models/dslim/bert-base-NER"
-headers = {"Authorization": "Bearer api_azMHDdYnrORmmLFRiKPSLWKlKLbROzbrXc"}
+headers = {"Authorization": "Bearer {}".format(TOKEN)}
 
 def query(payload):
 	data = json.dumps(payload)
