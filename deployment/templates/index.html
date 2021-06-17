@@ -36,10 +36,9 @@
     <script>
         var HandleSubmit = function() {
             var text = d3.select("#inputNER").node().value;
-            var request = d3.text("https://api-inference.huggingface.co/models/dslim/bert-base-NER", {
+            var request = d3.text("/inference/ner", {
                 method: "POST",
                 headers: {
-                    "Authorization": "Bearer api_azMHDdYnrORmmLFRiKPSLWKlKLbROzbrXc",
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
