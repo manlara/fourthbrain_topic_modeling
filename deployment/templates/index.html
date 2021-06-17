@@ -22,8 +22,7 @@
 
         <div class="row">
             <div class="col-md-offset-2 col-md-4">
-                <textarea id="inputNER" name="inputText" rows="4" cols="40">
-                </textarea>
+                <textarea id="inputNER" name="inputText" rows="4" cols="40"></textarea>
             </div>
             <div class="col-md-offset-2 col-md-4" id="outputNER">
                 This is where the colorful NER tag version of the input text will go
@@ -34,8 +33,9 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"></script>
     <script>
-        var HandleSubmit = function() {
+        var HandleSubmit = async function() {
             var text = d3.select("#inputNER").node().value;
+            document.querySelector("#outputNER").innerHTML = ""
             var request = d3.text("/inference/ner", {
                 method: "POST",
                 headers: {
@@ -45,11 +45,21 @@
                     "inputs": text
                 })
             });
-            // request is a Promise
-            request.then(function(result) {
-                // From here you create the colorful
-                console.log(result);
+
+            const response = await request
+            console.log(response)
+
+            let names = []
+            JSON.parse(response).forEach(result => {
+                let span = document.createElement("span")
+                span.className = "badge badge-primary"
+                span.innerHTML = `${result.word} <span class='badge badge-light'>${result.entity_group}</span>`
+                names.push(span)
             })
+            names.map(name => console.log(name))
+
+
+            document.querySelector("#outputNER").innerHTML = `My name is ${names[0].outerHTML} but you can call me ${names[1].outerHTML} `
         }
         d3.select("#submit").on("click", HandleSubmit)
     </script>
