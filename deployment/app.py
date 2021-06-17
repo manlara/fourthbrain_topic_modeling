@@ -23,6 +23,12 @@ def ner_inference():
     return jsonify(query(payload))
 
 
+@app.route("/inference/ner", methods=["POST"])
+def ner_inference():
+    payload = flask_request.get_json(force=True)
+    print(payload)
+    return jsonify(query(payload))
+
 @app.route("/", methods=["GET", "POST"])
 def home():
     if request.method == "POST":

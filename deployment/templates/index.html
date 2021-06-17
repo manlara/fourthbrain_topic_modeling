@@ -36,7 +36,6 @@
         var HandleSubmit = async function() {
             var text = d3.select("#inputNER").node().value;
             document.querySelector("#outputNER").innerHTML = ""
-
             var request = d3.text("/inference/ner", {
                 method: "POST",
                 headers: {
