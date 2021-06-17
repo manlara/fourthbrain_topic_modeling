@@ -35,6 +35,8 @@
     <script>
         var HandleSubmit = async function() {
             var text = d3.select("#inputNER").node().value;
+            document.querySelector("#outputNER").innerHTML = ""
+
             var request = d3.text("/inference/ner", {
                 method: "POST",
                 headers: {
@@ -46,17 +48,18 @@
             });
 
             const response = await request
-            
+            console.log(response)
+
             let names = []
-            JSON.parse(response).forEach(result => {              
-              let span = document.createElement("span")
-              span.className = "badge badge-primary"
-              span.innerHTML = `${result.word} <span class='badge badge-light'>${result.entity_group}</span>`
-              names.push(span)              
+            JSON.parse(response).forEach(result => {
+                let span = document.createElement("span")
+                span.className = "badge badge-primary"
+                span.innerHTML = `${result.word} <span class='badge badge-light'>${result.entity_group}</span>`
+                names.push(span)
             })
             names.map(name => console.log(name))
 
-            
+
             document.querySelector("#outputNER").innerHTML = `My name is ${names[0].outerHTML} but you can call me ${names[1].outerHTML} `
         }
         d3.select("#submit").on("click", HandleSubmit)
