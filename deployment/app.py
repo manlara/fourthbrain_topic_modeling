@@ -14,6 +14,12 @@ def query(payload):
 
 app = Flask(__name__)
 
+@app.route("/inference/ner", methods=["POST"])
+def ner_inference():
+    payload = flask_request.get_json(force=True)
+    print(payload)
+    return jsonify(query(payload))
+
 @app.route("/", methods=["GET", "POST"])
 def home():
     return render_template("index.html")
