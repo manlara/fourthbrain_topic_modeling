@@ -50,17 +50,42 @@
             const response = await request
             console.log(response)
 
-            let names = []
-            JSON.parse(response).forEach(result => {
+            const legend = await d3.json("/legend/ner")
+            console.log(legend)
+
+            const ner_words = JSON.parse(response).map(r => {
                 let span = document.createElement("span")
-                span.className = "badge badge-primary"
-                span.innerHTML = `${result.word} <span class='badge badge-light'>${result.entity_group}</span>`
-                names.push(span)
+                span.className = `badge badge-${legend[r.entity_group].color}`
+                span.innerHTML = `${r.word} <span class='badge badge-light'>${r.entity_group}</span>`
+                return span
             })
-            names.map(name => console.log(name))
+            console.log(ner_words)
 
 
-            document.querySelector("#outputNER").innerHTML = `My name is ${names[0].outerHTML} but you can call me ${names[1].outerHTML} `
+
+            const startIdxList = JSON.parse(response).map(r => r.start)
+            console.log(startIdxList)
+            const endIdxList = JSON.parse(response).map(r => r.end)
+            console.log(endIdxList)
+            let [lastStartIdx, lastEndIdx] = [0, 0]
+            const textList = []
+            for (i = 0; i < startIdxList.length; i++) {
+                if (lastStartIdx < startIdxList[i]) {
+                    console.log(lastStartIdx, startIdxList[i])
+                    w = text.slice(lastStartIdx, startIdxList[i])
+                    console.log(w)
+                    textList.push(w)
+                    lastStartIdx = endIdxList[i]
+                }
+                lastEndIdx = endIdxList[i]
+                console.log(startIdxList[i], endIdxList[i])
+                textList.push(ner_words[i].outerHTML)
+            }
+            if (lastEndIdx < text.length) {
+                textList.push(text.slice(lastEndIdx, text.length))
+            }
+            console.log(textList)
+            document.querySelector("#outputNER").innerHTML = textList.join()
         }
         d3.select("#submit").on("click", HandleSubmit)
     </script>
